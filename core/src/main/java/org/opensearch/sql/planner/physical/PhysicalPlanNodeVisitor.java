@@ -64,6 +64,10 @@ public abstract class PhysicalPlanNodeVisitor<R, C> {
     return visitNode(node, context);
   }
 
+  public R visitLukk(LukkOperator node, C context) {
+    return visitNode(node, context);
+  }
+
   public R visitValues(ValuesOperator node, C context) {
     return visitNode(node, context);
   }

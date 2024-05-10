@@ -38,6 +38,7 @@ commands
    | renameCommand
    | statsCommand
    | dedupCommand
+   | lukkCommand
    | sortCommand
    | evalCommand
    | headCommand
@@ -83,6 +84,18 @@ statsCommand
 
 dedupCommand
    : DEDUP (number = integerLiteral)? fieldList (KEEPEMPTY EQUAL keepempty = booleanLiteral)? (CONSECUTIVE EQUAL consecutive = booleanLiteral)?
+   ;
+
+matchFieldWithOptAs
+   : orignalMatchField = fieldExpression (AS asMatchField = fieldExpression)?
+   ;
+
+copyFieldWithOptAs
+   : orignalCopyField = fieldExpression (AS asCopyField = fieldExpression)?
+   ;
+
+lukkCommand
+   : LUKK tableSource matchFieldWithOptAs (COMMA matchFieldWithOptAs)* (APPENDONLY EQUAL appendonly = booleanLiteral)? (copyFieldWithOptAs (COMMA copyFieldWithOptAs)*)*
    ;
 
 sortCommand
@@ -825,6 +838,7 @@ keywordsCanBeId
    | RENAME
    | STATS
    | DEDUP
+   | LUKK
    | SORT
    | EVAL
    | HEAD

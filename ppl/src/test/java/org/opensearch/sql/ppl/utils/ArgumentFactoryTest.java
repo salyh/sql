@@ -14,12 +14,15 @@ import static org.opensearch.sql.ast.dsl.AstDSL.booleanLiteral;
 import static org.opensearch.sql.ast.dsl.AstDSL.dedupe;
 import static org.opensearch.sql.ast.dsl.AstDSL.exprList;
 import static org.opensearch.sql.ast.dsl.AstDSL.field;
+import static org.opensearch.sql.ast.dsl.AstDSL.fieldMap;
 import static org.opensearch.sql.ast.dsl.AstDSL.intLiteral;
+import static org.opensearch.sql.ast.dsl.AstDSL.lukk;
 import static org.opensearch.sql.ast.dsl.AstDSL.projectWithArg;
 import static org.opensearch.sql.ast.dsl.AstDSL.relation;
 import static org.opensearch.sql.ast.dsl.AstDSL.sort;
 import static org.opensearch.sql.ast.dsl.AstDSL.stringLiteral;
 
+import java.util.Collections;
 import org.junit.Test;
 import org.opensearch.sql.ppl.parser.AstBuilderTest;
 
@@ -101,5 +104,54 @@ public class ArgumentFactoryTest extends AstBuilderTest {
   @Test
   public void testNoArgConstructorForArgumentFactoryShouldPass() {
     new ArgumentFactory();
+  }
+
+  @Test
+  public void testLukkCommandRequiredArguments() {
+    assertEqual(
+        "source=t | lukk a field",
+        lukk(
+            relation("t"),
+            "a",
+            fieldMap("field", "field"),
+            exprList(argument("appendonly", booleanLiteral(false))),
+            Collections.emptyList()));
+  }
+
+  @Test
+  public void testLukkCommandFieldArguments() {
+    assertEqual(
+        "source=t | lukk a field AS field1,field2 AS field3 destfield AS destfield1, destfield2 AS"
+            + " destfield3",
+        lukk(
+            relation("t"),
+            "a",
+            fieldMap("field", "field1", "field2", "field3"),
+            exprList(argument("appendonly", booleanLiteral(false))),
+            fieldMap("destfield", "destfield1", "destfield2", "destfield3")));
+  }
+
+  @Test
+  public void testLukkCommandAppendTrueArgument() {
+    assertEqual(
+        "source=t | lukk a field appendonly=true",
+        lukk(
+            relation("t"),
+            "a",
+            fieldMap("field", "field"),
+            exprList(argument("appendonly", booleanLiteral(true))),
+            Collections.emptyList()));
+  }
+
+  @Test
+  public void testLukkCommandAppendFalseArgument() {
+    assertEqual(
+        "source=t | lukk a field appendonly=false",
+        lukk(
+            relation("t"),
+            "a",
+            fieldMap("field", "field"),
+            exprList(argument("appendonly", booleanLiteral(false))),
+            Collections.emptyList()));
   }
 }
