@@ -13,7 +13,7 @@ import org.opensearch.sql.planner.logical.LogicalEval;
 import org.opensearch.sql.planner.logical.LogicalFetchCursor;
 import org.opensearch.sql.planner.logical.LogicalFilter;
 import org.opensearch.sql.planner.logical.LogicalLimit;
-import org.opensearch.sql.planner.logical.LogicalLukk;
+import org.opensearch.sql.planner.logical.LogicalLookup;
 import org.opensearch.sql.planner.logical.LogicalNested;
 import org.opensearch.sql.planner.logical.LogicalPaginate;
 import org.opensearch.sql.planner.logical.LogicalPlan;
@@ -32,7 +32,7 @@ import org.opensearch.sql.planner.physical.DedupeOperator;
 import org.opensearch.sql.planner.physical.EvalOperator;
 import org.opensearch.sql.planner.physical.FilterOperator;
 import org.opensearch.sql.planner.physical.LimitOperator;
-import org.opensearch.sql.planner.physical.LukkOperator;
+import org.opensearch.sql.planner.physical.LookupOperator;
 import org.opensearch.sql.planner.physical.NestedOperator;
 import org.opensearch.sql.planner.physical.PhysicalPlan;
 import org.opensearch.sql.planner.physical.ProjectOperator;
@@ -77,8 +77,8 @@ public class DefaultImplementor<C> extends LogicalPlanNodeVisitor<PhysicalPlan, 
   }
 
   @Override
-  public PhysicalPlan visitLukk(LogicalLukk node, C context) {
-    return new LukkOperator(
+  public PhysicalPlan visitLookup(LogicalLookup node, C context) {
+    return new LookupOperator(
         visitChild(node, context),
         node.getIndexName(),
         node.getMatchFieldMap(),

@@ -16,7 +16,7 @@ import static org.opensearch.sql.ast.dsl.AstDSL.exprList;
 import static org.opensearch.sql.ast.dsl.AstDSL.field;
 import static org.opensearch.sql.ast.dsl.AstDSL.fieldMap;
 import static org.opensearch.sql.ast.dsl.AstDSL.intLiteral;
-import static org.opensearch.sql.ast.dsl.AstDSL.lukk;
+import static org.opensearch.sql.ast.dsl.AstDSL.lookup;
 import static org.opensearch.sql.ast.dsl.AstDSL.projectWithArg;
 import static org.opensearch.sql.ast.dsl.AstDSL.relation;
 import static org.opensearch.sql.ast.dsl.AstDSL.sort;
@@ -107,10 +107,10 @@ public class ArgumentFactoryTest extends AstBuilderTest {
   }
 
   @Test
-  public void testLukkCommandRequiredArguments() {
+  public void testLookupCommandRequiredArguments() {
     assertEqual(
-        "source=t | lukk a field",
-        lukk(
+        "source=t | lookup a field",
+        lookup(
             relation("t"),
             "a",
             fieldMap("field", "field"),
@@ -119,11 +119,11 @@ public class ArgumentFactoryTest extends AstBuilderTest {
   }
 
   @Test
-  public void testLukkCommandFieldArguments() {
+  public void testLookupCommandFieldArguments() {
     assertEqual(
-        "source=t | lukk a field AS field1,field2 AS field3 destfield AS destfield1, destfield2 AS"
-            + " destfield3",
-        lukk(
+        "source=t | lookup a field AS field1,field2 AS field3 destfield AS destfield1, destfield2"
+            + " AS destfield3",
+        lookup(
             relation("t"),
             "a",
             fieldMap("field", "field1", "field2", "field3"),
@@ -132,10 +132,10 @@ public class ArgumentFactoryTest extends AstBuilderTest {
   }
 
   @Test
-  public void testLukkCommandAppendTrueArgument() {
+  public void testLookupCommandAppendTrueArgument() {
     assertEqual(
-        "source=t | lukk a field appendonly=true",
-        lukk(
+        "source=t | lookup a field appendonly=true",
+        lookup(
             relation("t"),
             "a",
             fieldMap("field", "field"),
@@ -144,10 +144,10 @@ public class ArgumentFactoryTest extends AstBuilderTest {
   }
 
   @Test
-  public void testLukkCommandAppendFalseArgument() {
+  public void testLookupCommandAppendFalseArgument() {
     assertEqual(
-        "source=t | lukk a field appendonly=false",
-        lukk(
+        "source=t | lookup a field appendonly=false",
+        lookup(
             relation("t"),
             "a",
             fieldMap("field", "field"),

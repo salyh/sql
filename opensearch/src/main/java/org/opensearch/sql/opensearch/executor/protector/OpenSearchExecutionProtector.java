@@ -28,7 +28,7 @@ import org.opensearch.sql.planner.physical.DedupeOperator;
 import org.opensearch.sql.planner.physical.EvalOperator;
 import org.opensearch.sql.planner.physical.FilterOperator;
 import org.opensearch.sql.planner.physical.LimitOperator;
-import org.opensearch.sql.planner.physical.LukkOperator;
+import org.opensearch.sql.planner.physical.LookupOperator;
 import org.opensearch.sql.planner.physical.NestedOperator;
 import org.opensearch.sql.planner.physical.PhysicalPlan;
 import org.opensearch.sql.planner.physical.ProjectOperator;
@@ -135,8 +135,8 @@ public class OpenSearchExecutionProtector extends ExecutionProtector {
   }
 
   @Override
-  public PhysicalPlan visitLukk(LukkOperator node, Object context) {
-    return new LukkOperator(
+  public PhysicalPlan visitLookup(LookupOperator node, Object context) {
+    return new LookupOperator(
         visitInput(node.getInput(), context),
         node.getIndexName(),
         node.getMatchFieldMap(),

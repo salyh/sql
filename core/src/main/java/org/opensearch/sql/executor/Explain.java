@@ -22,7 +22,7 @@ import org.opensearch.sql.planner.physical.DedupeOperator;
 import org.opensearch.sql.planner.physical.EvalOperator;
 import org.opensearch.sql.planner.physical.FilterOperator;
 import org.opensearch.sql.planner.physical.LimitOperator;
-import org.opensearch.sql.planner.physical.LukkOperator;
+import org.opensearch.sql.planner.physical.LookupOperator;
 import org.opensearch.sql.planner.physical.NestedOperator;
 import org.opensearch.sql.planner.physical.PhysicalPlan;
 import org.opensearch.sql.planner.physical.PhysicalPlanNodeVisitor;
@@ -159,7 +159,7 @@ public class Explain extends PhysicalPlanNodeVisitor<ExplainResponseNode, Object
   }
 
   @Override
-  public ExplainResponseNode visitLukk(LukkOperator node, Object context) {
+  public ExplainResponseNode visitLookup(LookupOperator node, Object context) {
     return explain(
         node,
         context,

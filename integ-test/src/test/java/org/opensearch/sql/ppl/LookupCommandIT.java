@@ -14,7 +14,7 @@ import java.io.IOException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-public class LukkCommandIT extends PPLIntegTestCase {
+public class LookupCommandIT extends PPLIntegTestCase {
 
   @Override
   public void init() throws IOException {
@@ -23,8 +23,8 @@ public class LukkCommandIT extends PPLIntegTestCase {
   }
 
   @Test
-  public void testLukk() throws IOException {
-    JSONObject result = executeQuery(String.format("source=%s | lukk %s male", TEST_INDEX_BANK));
+  public void testLookup() throws IOException {
+    JSONObject result = executeQuery(String.format("source=%s | lookup %s male", TEST_INDEX_BANK));
     verifyDataRows(result, rows(true), rows(false));
   }
 

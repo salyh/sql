@@ -16,7 +16,7 @@ import org.opensearch.sql.expression.ReferenceExpression;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class LogicalLukk extends LogicalPlan {
+public class LogicalLookup extends LogicalPlan {
 
   private final String indexName;
   private final Map<ReferenceExpression, ReferenceExpression> matchFieldMap;
@@ -24,7 +24,7 @@ public class LogicalLukk extends LogicalPlan {
   private final Boolean appendOnly;
 
   /** Constructor of LogicalDedupe. */
-  public LogicalLukk(
+  public LogicalLookup(
       LogicalPlan child,
       String indexName,
       Map<ReferenceExpression, ReferenceExpression> matchFieldMap,
@@ -39,6 +39,6 @@ public class LogicalLukk extends LogicalPlan {
 
   @Override
   public <R, C> R accept(LogicalPlanNodeVisitor<R, C> visitor, C context) {
-    return visitor.visitLukk(this, context);
+    return visitor.visitLookup(this, context);
   }
 }

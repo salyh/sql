@@ -50,7 +50,7 @@ import org.opensearch.sql.ast.tree.Eval;
 import org.opensearch.sql.ast.tree.Filter;
 import org.opensearch.sql.ast.tree.Head;
 import org.opensearch.sql.ast.tree.Limit;
-import org.opensearch.sql.ast.tree.Lukk;
+import org.opensearch.sql.ast.tree.Lookup;
 import org.opensearch.sql.ast.tree.Parse;
 import org.opensearch.sql.ast.tree.Project;
 import org.opensearch.sql.ast.tree.RareTopN;
@@ -443,13 +443,13 @@ public class AstDSL {
     return new Dedupe(input, options, Arrays.asList(fields));
   }
 
-  public static Lukk lukk(
+  public static Lookup lookup(
       UnresolvedPlan input,
       String indexName,
       List<Map> matchFieldList,
       List<Argument> options,
       List<Map> copyFieldList) {
-    return new Lukk(input, indexName, matchFieldList, options, copyFieldList);
+    return new Lookup(input, indexName, matchFieldList, options, copyFieldList);
   }
 
   public static List<Map> fieldMap(String field, String asField, String... more) {

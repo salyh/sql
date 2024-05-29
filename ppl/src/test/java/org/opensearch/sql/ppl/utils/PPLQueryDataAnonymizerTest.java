@@ -90,8 +90,8 @@ public class PPLQueryDataAnonymizerTest {
   }
 
   @Test
-  public void testLukkCommand() {
-    assertEquals("source=t | lukk ", anonymize("source=t | lukk a field1, field2"));
+  public void testLookupCommand() {
+    assertEquals("source=t | lookup ", anonymize("source=t | lookup a field1, field2"));
   }
 
   @Test

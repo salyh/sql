@@ -20,10 +20,10 @@ import org.opensearch.sql.data.model.ExprValue;
 import org.opensearch.sql.data.model.ExprValueUtils;
 import org.opensearch.sql.expression.ReferenceExpression;
 
-/** Lukk operator. Perform lookup on another OpenSearch index and enrich the results. */
+/** Lookup operator. Perform lookup on another OpenSearch index and enrich the results. */
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class LukkOperator extends PhysicalPlan {
+public class LookupOperator extends PhysicalPlan {
   @Getter private final PhysicalPlan input;
   @Getter private final String indexName;
   @Getter private final Map<ReferenceExpression, ReferenceExpression> matchFieldMap;
@@ -31,9 +31,9 @@ public class LukkOperator extends PhysicalPlan {
   @Getter private final Boolean appendOnly;
   private final BiFunction<String, Map<String, Object>, Map<String, Object>> lookup;
 
-  /** Lukk Constructor. */
+  /** Lookup Constructor. */
   @NonNull
-  public LukkOperator(
+  public LookupOperator(
       PhysicalPlan input,
       String indexName,
       Map<ReferenceExpression, ReferenceExpression> matchFieldMap,
@@ -50,7 +50,7 @@ public class LukkOperator extends PhysicalPlan {
 
   @Override
   public <R, C> R accept(PhysicalPlanNodeVisitor<R, C> visitor, C context) {
-    return visitor.visitLukk(this, context);
+    return visitor.visitLookup(this, context);
   }
 
   @Override

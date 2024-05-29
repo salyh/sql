@@ -17,14 +17,14 @@ import org.opensearch.sql.ast.AbstractNodeVisitor;
 import org.opensearch.sql.ast.expression.Argument;
 import org.opensearch.sql.ast.expression.Map;
 
-/** AST node represent Lukk operation. */
+/** AST node represent Lookup operation. */
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Lukk extends UnresolvedPlan {
+public class Lookup extends UnresolvedPlan {
   private UnresolvedPlan child;
   private final String indexName;
   private final List<Map> matchFieldList;
@@ -32,7 +32,7 @@ public class Lukk extends UnresolvedPlan {
   private final List<Map> copyFieldList;
 
   @Override
-  public Lukk attach(UnresolvedPlan child) {
+  public Lookup attach(UnresolvedPlan child) {
     this.child = child;
     return this;
   }
@@ -44,6 +44,6 @@ public class Lukk extends UnresolvedPlan {
 
   @Override
   public <T, C> T accept(AbstractNodeVisitor<T, C> nodeVisitor, C context) {
-    return nodeVisitor.visitLukk(this, context);
+    return nodeVisitor.visitLookup(this, context);
   }
 }

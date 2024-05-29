@@ -38,7 +38,7 @@ commands
    | renameCommand
    | statsCommand
    | dedupCommand
-   | lukkCommand
+   | lookupCommand
    | sortCommand
    | evalCommand
    | headCommand
@@ -94,8 +94,8 @@ copyFieldWithOptAs
    : orignalCopyField = fieldExpression (AS asCopyField = fieldExpression)?
    ;
 
-lukkCommand
-   : LUKK tableSource matchFieldWithOptAs (COMMA matchFieldWithOptAs)* (APPENDONLY EQUAL appendonly = booleanLiteral)? (copyFieldWithOptAs (COMMA copyFieldWithOptAs)*)*
+lookupCommand
+   : LOOKUP tableSource matchFieldWithOptAs (COMMA matchFieldWithOptAs)* (APPENDONLY EQUAL appendonly = booleanLiteral)? (copyFieldWithOptAs (COMMA copyFieldWithOptAs)*)*
    ;
 
 sortCommand
@@ -838,7 +838,7 @@ keywordsCanBeId
    | RENAME
    | STATS
    | DEDUP
-   | LUKK
+   | LOOKUP
    | SORT
    | EVAL
    | HEAD

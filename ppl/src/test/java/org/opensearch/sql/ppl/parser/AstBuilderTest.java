@@ -27,7 +27,7 @@ import static org.opensearch.sql.ast.dsl.AstDSL.function;
 import static org.opensearch.sql.ast.dsl.AstDSL.head;
 import static org.opensearch.sql.ast.dsl.AstDSL.intLiteral;
 import static org.opensearch.sql.ast.dsl.AstDSL.let;
-import static org.opensearch.sql.ast.dsl.AstDSL.lukk;
+import static org.opensearch.sql.ast.dsl.AstDSL.lookup;
 import static org.opensearch.sql.ast.dsl.AstDSL.map;
 import static org.opensearch.sql.ast.dsl.AstDSL.nullLiteral;
 import static org.opensearch.sql.ast.dsl.AstDSL.parse;
@@ -382,10 +382,10 @@ public class AstBuilderTest {
   }
 
   @Test
-  public void testLukkCommand() {
+  public void testLookupCommand() {
     assertEqual(
-        "source=t | lukk a field",
-        lukk(
+        "source=t | lookup a field",
+        lookup(
             relation("t"),
             "a",
             fieldMap("field", "field"),

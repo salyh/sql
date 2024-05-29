@@ -12,7 +12,7 @@ import static org.opensearch.sql.ppl.antlr.parser.OpenSearchPPLParser.EvalComman
 import static org.opensearch.sql.ppl.antlr.parser.OpenSearchPPLParser.FieldsCommandContext;
 import static org.opensearch.sql.ppl.antlr.parser.OpenSearchPPLParser.FromClauseContext;
 import static org.opensearch.sql.ppl.antlr.parser.OpenSearchPPLParser.HeadCommandContext;
-import static org.opensearch.sql.ppl.antlr.parser.OpenSearchPPLParser.LukkCommandContext;
+import static org.opensearch.sql.ppl.antlr.parser.OpenSearchPPLParser.LookupCommandContext;
 import static org.opensearch.sql.ppl.antlr.parser.OpenSearchPPLParser.RareCommandContext;
 import static org.opensearch.sql.ppl.antlr.parser.OpenSearchPPLParser.RenameCommandContext;
 import static org.opensearch.sql.ppl.antlr.parser.OpenSearchPPLParser.SearchFilterFromContext;
@@ -55,7 +55,7 @@ import org.opensearch.sql.ast.tree.Eval;
 import org.opensearch.sql.ast.tree.Filter;
 import org.opensearch.sql.ast.tree.Head;
 import org.opensearch.sql.ast.tree.Kmeans;
-import org.opensearch.sql.ast.tree.Lukk;
+import org.opensearch.sql.ast.tree.Lookup;
 import org.opensearch.sql.ast.tree.ML;
 import org.opensearch.sql.ast.tree.Parse;
 import org.opensearch.sql.ast.tree.Project;
@@ -216,12 +216,12 @@ public class AstBuilder extends OpenSearchPPLParserBaseVisitor<UnresolvedPlan> {
 
   /** Lookup command */
   @Override
-  public UnresolvedPlan visitLukkCommand(LukkCommandContext ctx) {
+  public UnresolvedPlan visitLookupCommand(LookupCommandContext ctx) {
     ArgumentFactory.getArgumentList(ctx);
     ctx.tableSource();
     ctx.copyFieldWithOptAs();
     ctx.matchFieldWithOptAs();
-    return new Lukk(
+    return new Lookup(
         ctx.tableSource().tableQualifiedName().getText(),
         ctx.matchFieldWithOptAs().stream()
             .map(

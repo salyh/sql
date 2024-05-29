@@ -78,13 +78,13 @@ public class PhysicalPlanDSL {
         input, Arrays.asList(expressions), allowedDuplication, keepEmpty, consecutive);
   }
 
-  public static LukkOperator lukk(
+  public static LookupOperator lookup(
       PhysicalPlan input,
       String indexName,
       Map<ReferenceExpression, ReferenceExpression> matchFieldMap,
       Boolean appendOnly,
       Map<ReferenceExpression, ReferenceExpression> copyFieldMap) {
-    return new LukkOperator(
+    return new LookupOperator(
         input,
         indexName,
         matchFieldMap,

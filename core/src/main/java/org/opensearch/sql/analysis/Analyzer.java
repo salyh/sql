@@ -50,7 +50,7 @@ import org.opensearch.sql.ast.tree.Filter;
 import org.opensearch.sql.ast.tree.Head;
 import org.opensearch.sql.ast.tree.Kmeans;
 import org.opensearch.sql.ast.tree.Limit;
-import org.opensearch.sql.ast.tree.Lukk;
+import org.opensearch.sql.ast.tree.Lookup;
 import org.opensearch.sql.ast.tree.ML;
 import org.opensearch.sql.ast.tree.Paginate;
 import org.opensearch.sql.ast.tree.Parse;
@@ -91,7 +91,7 @@ import org.opensearch.sql.planner.logical.LogicalEval;
 import org.opensearch.sql.planner.logical.LogicalFetchCursor;
 import org.opensearch.sql.planner.logical.LogicalFilter;
 import org.opensearch.sql.planner.logical.LogicalLimit;
-import org.opensearch.sql.planner.logical.LogicalLukk;
+import org.opensearch.sql.planner.logical.LogicalLookup;
 import org.opensearch.sql.planner.logical.LogicalML;
 import org.opensearch.sql.planner.logical.LogicalMLCommons;
 import org.opensearch.sql.planner.logical.LogicalPaginate;
@@ -510,9 +510,9 @@ public class Analyzer extends AbstractNodeVisitor<LogicalPlan, AnalysisContext> 
         consecutive);
   }
 
-  /** Build {@link LogicalLukk}. */
+  /** Build {@link LogicalLookup}. */
   @Override
-  public LogicalPlan visitLukk(Lukk node, AnalysisContext context) {
+  public LogicalPlan visitLookup(Lookup node, AnalysisContext context) {
     LogicalPlan child = node.getChild().get(0).accept(this, context);
     List<Argument> options = node.getOptions();
     // Todo, refactor the option.
@@ -529,15 +529,15 @@ public class Analyzer extends AbstractNodeVisitor<LogicalPlan, AnalysisContext> 
           String.format("no such lookup index %s", node.getIndexName()));
     }
 
-    return new LogicalLukk(
+    return new LogicalLookup(
         child,
         node.getIndexName(),
-        analyzeLukkMatchFields(node.getMatchFieldList(), context),
+        analyzeLookupMatchFields(node.getMatchFieldList(), context),
         appendOnly,
-        analyzeLukkCopyFields(node.getCopyFieldList(), context, table));
+        analyzeLookupCopyFields(node.getCopyFieldList(), context, table));
   }
 
-  private ImmutableMap<ReferenceExpression, ReferenceExpression> analyzeLukkMatchFields(
+  private ImmutableMap<ReferenceExpression, ReferenceExpression> analyzeLookupMatchFields(
       List<Map> inputMap, AnalysisContext context) {
     ImmutableMap.Builder<ReferenceExpression, ReferenceExpression> copyMapBuilder =
         new ImmutableMap.Builder<>();
@@ -561,7 +561,7 @@ public class Analyzer extends AbstractNodeVisitor<LogicalPlan, AnalysisContext> 
     return copyMapBuilder.build();
   }
 
-  private ImmutableMap<ReferenceExpression, ReferenceExpression> analyzeLukkCopyFields(
+  private ImmutableMap<ReferenceExpression, ReferenceExpression> analyzeLookupCopyFields(
       List<Map> inputMap, AnalysisContext context, Table table) {
 
     TypeEnvironment curEnv = context.peek();

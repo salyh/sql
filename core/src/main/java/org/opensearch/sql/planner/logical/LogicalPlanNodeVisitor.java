@@ -52,7 +52,7 @@ public abstract class LogicalPlanNodeVisitor<R, C> {
     return visitNode(plan, context);
   }
 
-  public R visitLukk(LogicalLukk plan, C context) {
+  public R visitLookup(LogicalLookup plan, C context) {
     return visitNode(plan, context);
   }
 
