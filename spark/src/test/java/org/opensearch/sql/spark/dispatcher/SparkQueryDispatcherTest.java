@@ -62,6 +62,7 @@ import org.opensearch.sql.spark.asyncquery.model.AsyncQueryJobMetadata;
 import org.opensearch.sql.spark.client.EMRServerlessClient;
 import org.opensearch.sql.spark.client.EMRServerlessClientFactory;
 import org.opensearch.sql.spark.client.StartJobRequest;
+import org.opensearch.sql.spark.config.SparkSubmitParameterModifier;
 import org.opensearch.sql.spark.dispatcher.model.DispatchQueryRequest;
 import org.opensearch.sql.spark.dispatcher.model.DispatchQueryResponse;
 import org.opensearch.sql.spark.dispatcher.model.JobType;
@@ -90,6 +91,7 @@ public class SparkQueryDispatcherTest {
   @Mock private LeaseManager leaseManager;
   @Mock private IndexDMLResultStorageService indexDMLResultStorageService;
   @Mock private FlintIndexOpFactory flintIndexOpFactory;
+  @Mock private SparkSubmitParameterModifier sparkSubmitParameterModifier;
 
   @Mock(answer = RETURNS_DEEP_STUBS)
   private Session session;
@@ -158,7 +160,8 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.SQL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
 
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
@@ -206,7 +209,8 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.SQL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
     Assertions.assertEquals(EMR_JOB_ID, dispatchQueryResponse.getJobId());
@@ -253,7 +257,8 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.SQL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
 
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
@@ -299,7 +304,9 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.SQL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
+
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
     Assertions.assertEquals(EMR_JOB_ID, dispatchQueryResponse.getJobId());
@@ -413,7 +420,8 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.SQL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
 
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
@@ -460,7 +468,8 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.PPL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
 
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
@@ -507,7 +516,8 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.SQL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
 
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
@@ -558,7 +568,8 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.SQL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
 
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
@@ -609,7 +620,8 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.SQL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
 
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
@@ -656,7 +668,8 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.SQL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
 
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
@@ -703,7 +716,9 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.SQL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
+
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
     Assertions.assertEquals(EMR_JOB_ID, dispatchQueryResponse.getJobId());
@@ -749,7 +764,8 @@ public class SparkQueryDispatcherTest {
                 "my_glue",
                 LangType.SQL,
                 EMRS_EXECUTION_ROLE,
-                TEST_CLUSTER_NAME));
+                TEST_CLUSTER_NAME,
+                sparkSubmitParameterModifier));
 
     verify(emrServerlessClient, times(1)).startJobRun(startJobRequestArgumentCaptor.capture());
     Assertions.assertEquals(expected, startJobRequestArgumentCaptor.getValue());
@@ -774,7 +790,8 @@ public class SparkQueryDispatcherTest {
                         "my_glue",
                         LangType.SQL,
                         EMRS_EXECUTION_ROLE,
-                        TEST_CLUSTER_NAME)));
+                        TEST_CLUSTER_NAME,
+                        sparkSubmitParameterModifier)));
 
     Assertions.assertEquals(
         "Bad URI in indexstore configuration of the : my_glue datasoure.",
@@ -798,7 +815,8 @@ public class SparkQueryDispatcherTest {
                         "my_prometheus",
                         LangType.SQL,
                         EMRS_EXECUTION_ROLE,
-                        TEST_CLUSTER_NAME)));
+                        TEST_CLUSTER_NAME,
+                        sparkSubmitParameterModifier)));
 
     Assertions.assertEquals(
         "UnSupported datasource type for async queries:: PROMETHEUS",
@@ -1180,7 +1198,7 @@ public class SparkQueryDispatcherTest {
         langType,
         EMRS_EXECUTION_ROLE,
         TEST_CLUSTER_NAME,
-        extraParameters,
+        (parameters) -> parameters.setExtraParameters(extraParameters),
         null);
   }
 
@@ -1192,17 +1210,25 @@ public class SparkQueryDispatcherTest {
         LangType.SQL,
         EMRS_EXECUTION_ROLE,
         TEST_CLUSTER_NAME,
-        null,
+        sparkSubmitParameterModifier,
         sessionId);
   }
 
   private AsyncQueryJobMetadata asyncQueryJobMetadata() {
-    return new AsyncQueryJobMetadata(QUERY_ID, EMRS_APPLICATION_ID, EMR_JOB_ID, null);
+    return AsyncQueryJobMetadata.builder()
+        .queryId(QUERY_ID)
+        .applicationId(EMRS_APPLICATION_ID)
+        .jobId(EMR_JOB_ID)
+        .build();
   }
 
   private AsyncQueryJobMetadata asyncQueryJobMetadataWithSessionId(
       String statementId, String sessionId) {
-    return new AsyncQueryJobMetadata(
-        new AsyncQueryId(statementId), EMRS_APPLICATION_ID, EMR_JOB_ID, null, sessionId);
+    return AsyncQueryJobMetadata.builder()
+        .queryId(new AsyncQueryId(statementId))
+        .applicationId(EMRS_APPLICATION_ID)
+        .jobId(EMR_JOB_ID)
+        .sessionId(sessionId)
+        .build();
   }
 }

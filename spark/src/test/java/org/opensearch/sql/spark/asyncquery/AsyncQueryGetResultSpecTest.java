@@ -8,7 +8,6 @@ package org.opensearch.sql.spark.asyncquery;
 import static org.opensearch.action.support.WriteRequest.RefreshPolicy.WAIT_UNTIL;
 import static org.opensearch.sql.data.model.ExprValueUtils.tupleValue;
 import static org.opensearch.sql.datasource.model.DataSourceMetadata.DEFAULT_RESULT_INDEX;
-import static org.opensearch.sql.spark.execution.statestore.StateStore.getStatement;
 
 import com.amazonaws.services.emrserverless.model.JobRunState;
 import com.google.common.collect.ImmutableList;
@@ -27,10 +26,11 @@ import org.opensearch.sql.protocol.response.format.ResponseFormatter;
 import org.opensearch.sql.spark.asyncquery.model.AsyncQueryExecutionResponse;
 import org.opensearch.sql.spark.asyncquery.model.AsyncQueryResult;
 import org.opensearch.sql.spark.asyncquery.model.MockFlintSparkJob;
+import org.opensearch.sql.spark.asyncquery.model.NullRequestContext;
+import org.opensearch.sql.spark.asyncquery.model.RequestContext;
 import org.opensearch.sql.spark.client.EMRServerlessClientFactory;
 import org.opensearch.sql.spark.execution.statement.StatementModel;
 import org.opensearch.sql.spark.execution.statement.StatementState;
-import org.opensearch.sql.spark.execution.statestore.StateStore;
 import org.opensearch.sql.spark.flint.FlintIndexType;
 import org.opensearch.sql.spark.response.JobExecutionResponseReader;
 import org.opensearch.sql.spark.rest.model.CreateAsyncQueryRequest;
@@ -39,6 +39,7 @@ import org.opensearch.sql.spark.rest.model.LangType;
 import org.opensearch.sql.spark.transport.format.AsyncQueryResultResponseFormatter;
 
 public class AsyncQueryGetResultSpecTest extends AsyncQueryExecutorServiceSpec {
+  RequestContext requestContext = new NullRequestContext();
 
   /** Mock Flint index and index state */
   private final FlintDatasetMock mockIndex =
@@ -53,7 +54,8 @@ public class AsyncQueryGetResultSpecTest extends AsyncQueryExecutorServiceSpec {
 
   @Before
   public void doSetUp() {
-    mockIndexState = new MockFlintSparkJob(stateStore, mockIndex.latestId, MYS3_DATASOURCE);
+    mockIndexState =
+        new MockFlintSparkJob(flintIndexStateModelService, mockIndex.latestId, MYS3_DATASOURCE);
   }
 
   @Test
@@ -436,7 +438,8 @@ public class AsyncQueryGetResultSpecTest extends AsyncQueryExecutorServiceSpec {
               });
       this.createQueryResponse =
           queryService.createAsyncQuery(
-              new CreateAsyncQueryRequest(query, MYS3_DATASOURCE, LangType.SQL, null));
+              new CreateAsyncQueryRequest(query, MYS3_DATASOURCE, LangType.SQL, null),
+              requestContext);
     }
 
     AssertionHelper withInteraction(Interaction interaction) {
@@ -510,8 +513,8 @@ public class AsyncQueryGetResultSpecTest extends AsyncQueryExecutorServiceSpec {
 
     /** Simulate EMR-S updates query_execution_request with state */
     void emrJobUpdateStatementState(StatementState newState) {
-      StatementModel stmt = getStatement(stateStore, MYS3_DATASOURCE).apply(queryId).get();
-      StateStore.updateStatementState(stateStore, MYS3_DATASOURCE).apply(stmt, newState);
+      StatementModel stmt = statementStorageService.getStatement(queryId, MYS3_DATASOURCE).get();
+      statementStorageService.updateStatementState(stmt, newState);
     }
 
     void emrJobUpdateJobState(JobRunState jobState) {

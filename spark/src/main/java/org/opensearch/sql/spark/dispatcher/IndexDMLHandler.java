@@ -31,7 +31,12 @@ import org.opensearch.sql.spark.flint.operation.FlintIndexOp;
 import org.opensearch.sql.spark.flint.operation.FlintIndexOpFactory;
 import org.opensearch.sql.spark.response.JobExecutionResponseReader;
 
-/** Handle Index DML query. includes * DROP * ALT? */
+/**
+ * The handler for Index DML (Data Manipulation Language) query. Handles DROP/ALTER/VACUUM operation
+ * for flint indices. It will stop streaming query job as needed (e.g. when the flint index is
+ * automatically updated by a streaming query, the streaming query is stopped when the index is
+ * dropped)
+ */
 @RequiredArgsConstructor
 public class IndexDMLHandler extends AsyncQueryHandler {
   private static final Logger LOG = LogManager.getLogger();
@@ -91,14 +96,15 @@ public class IndexDMLHandler extends AsyncQueryHandler {
       long queryRunTime) {
     AsyncQueryId asyncQueryId = AsyncQueryId.newAsyncQueryId(dataSourceMetadata.getName());
     IndexDMLResult indexDMLResult =
-        new IndexDMLResult(
-            asyncQueryId.getId(),
-            status,
-            error,
-            dispatchQueryRequest.getDatasource(),
-            queryRunTime,
-            System.currentTimeMillis());
-    indexDMLResultStorageService.createIndexDMLResult(indexDMLResult, dataSourceMetadata.getName());
+        IndexDMLResult.builder()
+            .queryId(asyncQueryId.getId())
+            .status(status)
+            .error(error)
+            .datasourceName(dispatchQueryRequest.getDatasource())
+            .queryRunTime(queryRunTime)
+            .updateTime(System.currentTimeMillis())
+            .build();
+    indexDMLResultStorageService.createIndexDMLResult(indexDMLResult);
     return asyncQueryId;
   }
 

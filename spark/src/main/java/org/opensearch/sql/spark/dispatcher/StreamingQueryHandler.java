@@ -26,16 +26,17 @@ import org.opensearch.sql.spark.leasemanager.LeaseManager;
 import org.opensearch.sql.spark.leasemanager.model.LeaseRequest;
 import org.opensearch.sql.spark.response.JobExecutionResponseReader;
 
-/** Handle Streaming Query. */
+/**
+ * The handler for streaming query. Streaming query is a job to continuously update flint index.
+ * Once started, the job can be stopped by IndexDML query.
+ */
 public class StreamingQueryHandler extends BatchQueryHandler {
-  private final EMRServerlessClient emrServerlessClient;
 
   public StreamingQueryHandler(
       EMRServerlessClient emrServerlessClient,
       JobExecutionResponseReader jobExecutionResponseReader,
       LeaseManager leaseManager) {
     super(emrServerlessClient, jobExecutionResponseReader, leaseManager);
-    this.emrServerlessClient = emrServerlessClient;
   }
 
   @Override
@@ -68,13 +69,13 @@ public class StreamingQueryHandler extends BatchQueryHandler {
             jobName,
             dispatchQueryRequest.getApplicationId(),
             dispatchQueryRequest.getExecutionRoleARN(),
-            SparkSubmitParameters.Builder.builder()
+            SparkSubmitParameters.builder()
                 .clusterName(clusterName)
                 .dataSource(dataSourceMetadata)
                 .query(dispatchQueryRequest.getQuery())
                 .structuredStreaming(true)
-                .extraParameters(dispatchQueryRequest.getExtraSparkSubmitParams())
                 .build()
+                .acceptModifier(dispatchQueryRequest.getSparkSubmitParameterModifier())
                 .toString(),
             tags,
             indexQueryDetails.getFlintIndexOptions().autoRefresh(),

@@ -28,9 +28,19 @@ import org.opensearch.sql.spark.config.SparkExecutionEngineConfigSupplierImpl;
 import org.opensearch.sql.spark.dispatcher.QueryHandlerFactory;
 import org.opensearch.sql.spark.dispatcher.SparkQueryDispatcher;
 import org.opensearch.sql.spark.execution.session.SessionManager;
+import org.opensearch.sql.spark.execution.statestore.OpenSearchSessionStorageService;
+import org.opensearch.sql.spark.execution.statestore.OpenSearchStatementStorageService;
+import org.opensearch.sql.spark.execution.statestore.SessionStorageService;
 import org.opensearch.sql.spark.execution.statestore.StateStore;
+import org.opensearch.sql.spark.execution.statestore.StatementStorageService;
+import org.opensearch.sql.spark.execution.xcontent.AsyncQueryJobMetadataXContentSerializer;
+import org.opensearch.sql.spark.execution.xcontent.FlintIndexStateModelXContentSerializer;
+import org.opensearch.sql.spark.execution.xcontent.SessionModelXContentSerializer;
+import org.opensearch.sql.spark.execution.xcontent.StatementModelXContentSerializer;
 import org.opensearch.sql.spark.flint.FlintIndexMetadataServiceImpl;
+import org.opensearch.sql.spark.flint.FlintIndexStateModelService;
 import org.opensearch.sql.spark.flint.IndexDMLResultStorageService;
+import org.opensearch.sql.spark.flint.OpenSearchFlintIndexStateModelService;
 import org.opensearch.sql.spark.flint.OpenSearchIndexDMLResultStorageService;
 import org.opensearch.sql.spark.flint.operation.FlintIndexOpFactory;
 import org.opensearch.sql.spark.leasemanager.DefaultLeaseManager;
@@ -55,8 +65,8 @@ public class AsyncExecutorServiceModule extends AbstractModule {
 
   @Provides
   public AsyncQueryJobMetadataStorageService asyncQueryJobMetadataStorageService(
-      StateStore stateStore) {
-    return new OpensearchAsyncQueryJobMetadataStorageService(stateStore);
+      StateStore stateStore, AsyncQueryJobMetadataXContentSerializer serializer) {
+    return new OpensearchAsyncQueryJobMetadataStorageService(stateStore, serializer);
   }
 
   @Provides
@@ -96,12 +106,18 @@ public class AsyncExecutorServiceModule extends AbstractModule {
 
   @Provides
   public FlintIndexOpFactory flintIndexOpFactory(
-      StateStore stateStore,
+      FlintIndexStateModelService flintIndexStateModelService,
       NodeClient client,
       FlintIndexMetadataServiceImpl flintIndexMetadataService,
       EMRServerlessClientFactory emrServerlessClientFactory) {
     return new FlintIndexOpFactory(
-        stateStore, client, flintIndexMetadataService, emrServerlessClientFactory);
+        flintIndexStateModelService, client, flintIndexMetadataService, emrServerlessClientFactory);
+  }
+
+  @Provides
+  public FlintIndexStateModelService flintIndexStateModelService(
+      StateStore stateStore, FlintIndexStateModelXContentSerializer serializer) {
+    return new OpenSearchFlintIndexStateModelService(stateStore, serializer);
   }
 
   @Provides
@@ -112,10 +128,24 @@ public class AsyncExecutorServiceModule extends AbstractModule {
 
   @Provides
   public SessionManager sessionManager(
-      StateStore stateStore,
+      SessionStorageService sessionStorageService,
+      StatementStorageService statementStorageService,
       EMRServerlessClientFactory emrServerlessClientFactory,
       Settings settings) {
-    return new SessionManager(stateStore, emrServerlessClientFactory, settings);
+    return new SessionManager(
+        sessionStorageService, statementStorageService, emrServerlessClientFactory, settings);
+  }
+
+  @Provides
+  public SessionStorageService sessionStorageService(
+      StateStore stateStore, SessionModelXContentSerializer serializer) {
+    return new OpenSearchSessionStorageService(stateStore, serializer);
+  }
+
+  @Provides
+  public StatementStorageService statementStorageService(
+      StateStore stateStore, StatementModelXContentSerializer serializer) {
+    return new OpenSearchStatementStorageService(stateStore, serializer);
   }
 
   @Provides
